@@ -1,0 +1,62 @@
+<div class="col-lg-12 topic-box">
+	<div class="topic-data col-lg-9 float-left">
+		<h1>topic-detail works!  {{ topic.title }} </h1>
+		<span class="badge badge-warnind ml-2" *ngIf="topic.lang">
+			{{ topic.lang }}
+		</span>
+		<span class="badge badge-primary">
+			{{ topic.user.name + ' ' + topic.user.surname }}
+		</span>
+		<span class="badge badge-light ml-2">
+			{{ topic.date | amLocale: 'es' | amTimeAgo }}
+		</span>
+		<p id="topicContent" class="mt-2 col-lg-9">
+			{{ topic.content }}
+		</p>
+		<p id="topiCode" *ngIf="topic.code">
+			<ngx-highlight-js lang="{{ topic.lang }}" code={{topic.code}}>
+				{{ topic.code }}
+			</ngx-highlight-js>
+		</p>
+	</div>
+	<div class="clearfix"></div>
+	<div id="comment-box" class="mt-2">
+		<h3>Comentarios</h3>
+		<hr>
+		<div class="alert alert-success mt-3" *ngIf="status == 'success'">
+			El comentario se ha guardado correctamente
+		</div>
+		<div class="alert alert-danger mt-3" *ngIf="status == 'error'">
+			El comentario no se ha completado
+		</div>
+		<form #formComment="ngForm" (ngSubmit)="onSubmit(formComment)" *ngIf="identity">
+			<div class="form-group">
+				<label for="content">Pon tu comentario</label>
+				<textarea name="content" #content="ngModel" [(ngModel)]="comment.content" required class="form-control"></textarea>
+				<small *ngIf="!content.valid && content.touched" class="invalid-feedback d-block">
+					El contendio no es valido
+				</small>
+			</div>
+			<input type="submit" value="Comentar" [disabled]="formComment.invalid" class="btn btn-success">
+		</form>
+		<hr>
+		<ul class="list-group list-comments mb-5">
+		  <li class="list-group-item comment-item" *ngFor="let comment of topic.comments">
+		  	<div class="avatar_mask float-left">
+		  		<img src="{{ url + 'avatar/' + comment.user.image }}" alt="" class="avatar_nav mr-3"/>
+		  	</div>
+		  	<span class="badge badge-primary">
+		  		{{ comment.user.name + ' ' + comment.user.surname}}
+		  	</span>
+		  	<span class="badge badge-light ml-2">
+		  		{{ comment.date | amLocale: 'es' | amTimeAgo }}
+		  	</span>
+		  	<span class="d-block">
+			  	{{comment.content}}
+			</span>
+			<button (click)="deleteComment( comment._id )" class="btn btn-sm btn-danger float-right" *ngIf="identity._id == comment.user._id">Borrar</button>
+		  </li>
+		</ul>
+	</div>
+	
+</div>

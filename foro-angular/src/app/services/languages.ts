@@ -1,0 +1,1 @@
+/* Configuracion para las variables para los idiomas */
